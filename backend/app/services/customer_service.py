@@ -19,6 +19,4 @@ class CustomerService:
 
     def get(self, customer_name: str):
 
-        return self.erp.get(
-            f"/api/resource/Customer/{customer_name}"
-        )
+        return self.erp.get(f"/api/resource/Customer/{customer_name}")

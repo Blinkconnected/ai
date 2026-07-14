@@ -1,22 +1,17 @@
-from app.connectors.erpnext import ERPNextConnector
-from app.tools.base import BaseTool
+from typing import Any
+
+from app.services.customer_service import CustomerService
+from app.tools.base import BaseTool, ToolResult
 
 
 class CustomerListTool(BaseTool):
+    """Tool for listing customers through the customer service."""
 
     name = "customer.list"
+    description = "List ERPNext customers"
 
-    description = "Return ERPNext customers."
+    def __init__(self, service: CustomerService | None = None) -> None:
+        self.service = service or CustomerService()
 
-    def __init__(self):
-        self.erp = ERPNextConnector()
-
-    def execute(self, **kwargs):
-
-        return self.erp.get(
-            "/api/resource/Customer",
-            {
-                "fields": '["name","customer_name"]',
-                "limit_page_length": kwargs.get("limit", 20),
-            },
-        )
+    def execute(self, **kwargs: Any) -> ToolResult:
+        return self.service.list(limit=kwargs.get("limit", 20))
