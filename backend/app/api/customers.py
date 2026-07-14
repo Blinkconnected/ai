@@ -1,19 +1,22 @@
 from fastapi import APIRouter
 
-from app.connectors.erpnext import ERPNextConnector
+from app.services.customer_service import CustomerService
 
-router = APIRouter(prefix="/customers", tags=["Customers"])
+router = APIRouter(
+    prefix="/customers",
+    tags=["Customers"],
+)
 
-erp = ERPNextConnector()
+service = CustomerService()
 
 
 @router.get("/")
 def list_customers():
 
-    return erp.get(
-        "/api/resource/Customer",
-        params={
-            "fields": '["name","customer_name"]',
-            "limit_page_length": 20,
-        },
-    )
+    return service.list()
+
+
+@router.get("/{customer}")
+def get_customer(customer: str):
+
+    return service.get(customer)
